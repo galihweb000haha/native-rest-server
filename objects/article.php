@@ -157,7 +157,7 @@ class Article
     function delete(){
     
         // delete query
-        $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
+        $query = "DELETE FROM " . $this->table_name . " WHERE id_artikel = ?";
     
         // prepare query
         $stmt = $this->conn->prepare($query);

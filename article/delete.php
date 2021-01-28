@@ -20,7 +20,6 @@ $article = new Article($db);
 // get article id
 $data = json_decode(file_get_contents("php://input"));
   
-die($data);
 // set article id to be deleted
 $article->id = $data->id;
   
