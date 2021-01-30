@@ -15,7 +15,9 @@ class Article
     public $nama_creator;
     public $gambar_artikel;
     public $hits;
-  
+    public $id_kategori;
+    public $id_user;
+
     // constructor with $db as database connection
     public function __construct($db){
         $this->conn = $db;
@@ -53,24 +55,34 @@ class Article
         $query = "INSERT INTO
                     " . $this->table_name . "
                 SET
-                    name=:name, price=:price, description=:description, category_id=:category_id, created=:created";
+                    judul_artikel=:judul_artikel,
+                    waktu_artikel=:waktu_artikel,
+                    id_kategori=:id_kategori,
+                    id_user=:id_user,
+                    isi_artikel=:isi_artikel,
+                    gambar_artikel=:gambar_artikel,
+                    hits=:hits";
     
         // prepare query
         $stmt = $this->conn->prepare($query);
     
         // sanitize
-        $this->name=htmlspecialchars(strip_tags($this->name));
-        $this->price=htmlspecialchars(strip_tags($this->price));
-        $this->description=htmlspecialchars(strip_tags($this->description));
-        $this->category_id=htmlspecialchars(strip_tags($this->category_id));
-        $this->created=htmlspecialchars(strip_tags($this->created));
-    
+        $this->judul_artikel=htmlspecialchars(strip_tags($this->judul_artikel));
+        $this->waktu_artikel=htmlspecialchars(strip_tags($this->waktu_artikel));
+        $this->id_kategori=htmlspecialchars(strip_tags($this->id_kategori));
+        $this->id_user=htmlspecialchars(strip_tags($this->id_user));        
+        $this->isi_artikel=htmlspecialchars(strip_tags($this->isi_artikel));
+        $this->gambar_artikel=htmlspecialchars(strip_tags($this->gambar_artikel));
+        $this->hits=htmlspecialchars(strip_tags($this->hits));
+
         // bind values
-        $stmt->bindParam(":name", $this->name);
-        $stmt->bindParam(":price", $this->price);
-        $stmt->bindParam(":description", $this->description);
-        $stmt->bindParam(":category_id", $this->category_id);
-        $stmt->bindParam(":created", $this->created);
+        $stmt->bindParam(":judul_artikel", $this->judul_artikel);
+        $stmt->bindParam(":waktu_artikel", $this->waktu_artikel);
+        $stmt->bindParam(":id_kategori", $this->id_kategori);
+        $stmt->bindParam(":id_user", $this->id_user);        
+        $stmt->bindParam(":isi_artikel", $this->isi_artikel);
+        $stmt->bindParam(":gambar_artikel", $this->gambar_artikel);
+        $stmt->bindParam(":hits", $this->hits);
     
         // execute query
         if($stmt->execute()){
@@ -85,22 +97,24 @@ class Article
     
         // query to read single record
         $query = "SELECT
-                    c.name as category_name, p.id, p.name, p.description, p.price, p.category_id, p.created
-                FROM
-                    " . $this->table_name . " p
-                    LEFT JOIN
-                        categories c
-                            ON p.category_id = c.id
-                WHERE
-                    p.id = ?
-                LIMIT
-                    0,1";
+                    artikel.id_artikel,
+                    artikel.judul_artikel,
+                    artikel.waktu_artikel,
+                    artikel.isi_artikel,
+                    kategori.kategori AS kategori,
+                    user.nama_pengguna AS nama_creator,
+                    artikel.gambar_artikel,
+                    artikel.hits
+                FROM artikel
+                LEFT JOIN kategori ON kategori.id_kategori = artikel.id_kategori
+                LEFT JOIN user ON user.id_user = artikel.id_user
+                WHERE id_artikel = ?";
     
         // prepare query statement
         $stmt = $this->conn->prepare( $query );
     
         // bind id of product to be updated
-        $stmt->bindParam(1, $this->id);
+        $stmt->bindParam(1, $this->id_artikel);
     
         // execute query
         $stmt->execute();
@@ -109,11 +123,14 @@ class Article
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
         // set values to object properties
-        $this->name = $row['name'];
-        $this->price = $row['price'];
-        $this->description = $row['description'];
-        $this->category_id = $row['category_id'];
-        $this->category_name = $row['category_name'];
+        $this->id_artikel = $row['id_artikel'];
+        $this->judul_artikel = $row['judul_artikel'];
+        $this->waktu_artikel = $row['waktu_artikel'];
+        $this->kategori = $row['kategori'];
+        $this->nama_creator = $row['nama_creator'];
+        $this->isi_artikel = $row['isi_artikel'];
+        $this->gambar_artikel = $row['gambar_artikel'];
+        $this->hits = $row['hits'];
     }
     // update the product
     function update(){

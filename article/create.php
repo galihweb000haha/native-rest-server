@@ -9,50 +9,53 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // get database connection
 include_once '../config/database.php';
   
-// instantiate product object
-include_once '../objects/product.php';
+// instantiate article object
+include_once '../objects/article.php';
   
 $database = new Database();
 $db = $database->getConnection();
   
-$product = new Product($db);
+$article = new Article($db);
   
 // get posted data
 $data = json_decode(file_get_contents("php://input"));
+var_dump($data);
   
 // make sure data is not empty
 if(
-    !empty($data->name) &&
-    !empty($data->price) &&
-    !empty($data->description) &&
-    !empty($data->category_id)
+    !empty($data->judul_artikel) &&
+    !empty($data->isi_artikel) &&
+    !empty($data->id_kategori) &&
+    !empty($data->id_user)
 ){
   
-    // set product property values
-    $product->name = $data->name;
-    $product->price = $data->price;
-    $product->description = $data->description;
-    $product->category_id = $data->category_id;
-    $product->created = date('Y-m-d H:i:s');
+    // set article property values
+    $article->judul_artikel = $data->judul_artikel;
+    $article->waktu_artikel = date('Y-m-d H:i:s');
+    $article->id_kategori = $data->id_kategori;
+    $article->id_user = $data->id_user;
+    $article->isi_artikel = $data->isi_artikel;
+    $article->gambar_artikel = $data->gambar_artikel;
+    $article->hits = $data->hits;
   
-    // create the product
-    if($product->create()){
+    // create the article
+    if($article->create()){
   
         // set response code - 201 created
         http_response_code(201);
   
         // tell the user
-        echo json_encode(array("message" => "Product was created."));
+        echo json_encode(array("message" => "article was created."));
     }
   
-    // if unable to create the product, tell the user
+    // if unable to create the article, tell the user
     else{
   
         // set response code - 503 service unavailable
         http_response_code(503);
   
         // tell the user
-        echo json_encode(array("message" => "Unable to create product."));
+        echo json_encode(array("message" => "Unable to create article."));
     }
 }
   
@@ -63,6 +66,6 @@ else{
     http_response_code(400);
   
     // tell the user
-    echo json_encode(array("message" => "Unable to create product. Data is incomplete."));
+    echo json_encode(array("message" => "Unable to create article. Data is incomplete."));
 }
 ?>
