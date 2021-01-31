@@ -21,7 +21,7 @@ $article = new Article($db);
 $data = json_decode(file_get_contents("php://input"));
   
 // set article id to be deleted
-$article->id = $data->id;
+$article->id_artikel = $data->id;
   
 // delete the article
 if($article->delete()){

@@ -180,10 +180,10 @@ class Article
         $stmt = $this->conn->prepare($query);
     
         // sanitize
-        $this->id=htmlspecialchars(strip_tags($this->id));
+        $this->id_artikel=htmlspecialchars(strip_tags($this->id_artikel));
     
         // bind id of record to delete
-        $stmt->bindParam(1, $this->id);
+        $stmt->bindParam(1, $this->id_artikel);
     
         // execute query
         if($stmt->execute()){

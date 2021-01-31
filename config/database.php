@@ -2,10 +2,10 @@
 class Database{
   
     // specify your own database credentials
-    private $host = "localhost";
-    private $db_name = "cblg_db";
-    private $username = "root";
-    private $password = "";
+    private $host       = "localhost";
+    private $db_name    = "cblg_db";
+    private $username   = "root";
+    private $password   = "";
     public $conn;
   
     // get the database connection
